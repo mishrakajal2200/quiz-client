@@ -60,7 +60,7 @@ const Signup = ({ setAuthData }) => {
   };
 
   return (
-    <div className="signup-page d-flex justify-content-center bg-lightgray align-items-center">
+    <div className="signup-page d-flex justify-content-center align-items-center">
       <ToastContainer position="top-right" />
       <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 align-items-center">
         <div className="justify-content-center align-items-center d-flex">
@@ -98,7 +98,7 @@ const Signup = ({ setAuthData }) => {
             </span>
             <input
               type="text"
-              name="fullName"
+              name="Last Name"
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Full Name"

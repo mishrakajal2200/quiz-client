@@ -217,7 +217,7 @@ const handleSubmit = async () => {
   console.log('Sending result to backend:', quizResult); // Log to verify data
 
   try {
-    const response = await fetch('https://quiz-server-bh0b.onrender.com/api/quiz/submit-quiz', {
+    const response = await fetch('https://quiz-server-d94n.onrender.com/quiz/submit-quiz', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -231,7 +231,7 @@ const handleSubmit = async () => {
       console.log('Quiz result saved:', result);
 
       // Trigger SMS sending logic if needed
-      await fetch('https://quiz-server-bh0b.onrender.com/api/quiz/send-sms', {
+      await fetch('https://quiz-server-d94n.onrender.com/api/quiz/send-sms', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

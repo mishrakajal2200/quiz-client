@@ -29,7 +29,7 @@ const Contact = () => {
   
     try {
       const response = await axios.post(
-        'https://quiz-server-bh0b.onrender.com/api/feedback-submit', // Backend URL
+        'https://quiz-server-d94n.onrender.com/api/feedback-submit', // Backend URL
         formData,
         {
           headers: {

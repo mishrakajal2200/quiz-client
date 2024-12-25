@@ -40,7 +40,7 @@ const Signup = ({ setAuthData }) => {
 
     
     try {
-      const response = await axios.post('https://quiz-server-bh0b.onrender.com/api/signup', formData);
+      const response = await axios.post('https://quiz-server-d94n.onrender.com/api/signup', formData);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.username); // Save username to localStorage
       localStorage.setItem('fullName',response.data.fullName);

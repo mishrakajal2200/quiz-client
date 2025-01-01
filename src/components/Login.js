@@ -32,7 +32,7 @@ const Login = ({ setAuthData }) => {
     setIsLoading(true);
    
     try {
-      const response = await axios.post('http://localhost:5000/api/login', formData);
+      const response = await axios.post('https://quiz-server-d94n.onrender.com/api/login', formData);
 
       // Store token and username in localStorage
       localStorage.setItem('token', response.data.token);

@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Fade } from "react-awesome-reveal";
+
 import axios from "axios";
 
 const Contact = () => {
@@ -34,7 +34,7 @@ const Contact = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/feedback-submit",
+        "https://quiz-server-d94n.onrender.com/api/feedback-submit",
         formData,
         {
           headers: {

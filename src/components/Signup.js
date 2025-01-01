@@ -12,7 +12,6 @@ const Signup = ({ setAuthData }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
-    fullName:'',
     email: '',
     password: '',
     confirmPassword: ''
@@ -40,7 +39,7 @@ const Signup = ({ setAuthData }) => {
 
     
     try {
-      const response = await axios.post('https://quiz-server-d94n.onrender.com/api/signup', formData);
+      const response = await axios.post('http://localhost:5000/api/signup', formData);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.username); // Save username to localStorage
       localStorage.setItem('fullName',response.data.fullName);
@@ -62,7 +61,7 @@ const Signup = ({ setAuthData }) => {
   return (
     <div className="signup-page d-flex justify-content-center align-items-center">
       <ToastContainer position="top-right" />
-      <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 align-items-center">
+      <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 mt-5 align-items-center">
         <div className="justify-content-center align-items-center d-flex">
           <img
             src="https://cdn4.iconfinder.com/data/icons/ui-3d-01-of-3/100/UI_26-512.png"
@@ -84,25 +83,8 @@ const Signup = ({ setAuthData }) => {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Name"
-              className="form-control"
-              required
-               autoComplete="off"
-            />
-          </div>
-
-          {/* full name */}
-          <div className="input-group mb-3">
-            <span className="input-group-text bg-info">
-              <FaUser style={{ color: 'white'}}/>
-            </span>
-            <input
-              type="text"
-              name="Last Name"
-              value={formData.fullName}
-              onChange={handleChange}
               placeholder="Full Name"
-              className="form-control"
+              className="form-control text-nowrap"
               required
               autoComplete="off"
             />

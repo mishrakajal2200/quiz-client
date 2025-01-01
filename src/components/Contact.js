@@ -1,15 +1,21 @@
-
-import React, { useState } from 'react';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaUser, FaPaperPlane } from 'react-icons/fa';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+import React, { useState } from "react";
+import {
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaUser,
+  FaPaperPlane,
+} from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Fade } from "react-awesome-reveal";
+import axios from "axios";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
+    name: "",
+    email: "",
+    message: "",
   });
 
   const handleChange = (e) => {
@@ -19,134 +25,141 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const token = localStorage.getItem('token'); // Fetch the token from localStorage
-   
+
+    const token = localStorage.getItem("token");
     if (!token) {
-      toast.error('Unauthorized: Please log in first.');
+      toast.error("Unauthorized: Please log in first.");
       return;
     }
-  
+
     try {
       const response = await axios.post(
-        'https://quiz-server-d94n.onrender.com/api/feedback-submit', // Backend URL
+        "http://localhost:5000/api/feedback-submit",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
-  
+
       if (response.status === 200) {
-        toast.success('Feedback submitted successfully!');
-        setFormData({ name: '', email: '', message: '' }); // Reset form data
+        toast.success("Feedback submitted successfully!");
+        setFormData({ name: "", email: "", message: "" });
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        toast.error(error.response.data.error || 'Unauthorized: Invalid token.');
-      } else {
-        toast.error('Failed to submit feedback.');
-      }
-      console.error('Error:', error.response ? error.response.data : error.message);
+      const errorMsg =
+        error.response?.status === 401
+          ? error.response.data.error || "Unauthorized: Invalid token."
+          : "Failed to submit feedback.";
+      toast.error(errorMsg);
     }
   };
-  
 
   return (
-    <div className="contact-page d-flex justify-content-center align-items-center mt-3 bg-white">
+    <div className="container  my-3">
       <ToastContainer position="top-right" />
-      <div className="text-center col-lg-6 col-10 col-sm-10 col-md-10 col-10">
-        <h1 className="text-danger">Get in Touch with Us</h1>
-        <p className="text-black fs-4">
-          We'd love to hear from you! Whether you have feedback, questions, or suggestions, feel free to reach out to us:
+      <div className="text-center">
+        <h1 className="text-danger mb-3">Get in Touch</h1>
+        <p className="text-muted fs-5">
+          Have questions? Send us your message or connect with us directly.
         </p>
-
-        <div className="container my-4">
-  <div className="row align-items-center justify-content-center">
-    <div className="col-md-8 col-lg-10">
-      <ul className="list-unstyled text-start bg-light p-4 rounded shadow-sm">
-        <li className="mb-3">
-          <h6 className="d-flex align-items-center">
-            <FaEnvelope className="me-2 text-danger" />
-            <span>Email: devsirtutorials@gmail.com</span>
-          </h6>
-        </li>
-        <li className="mb-3">
-          <h6 className="d-flex align-items-center">
-            <FaPhone className="me-2 text-success" />
-            <span>Phone: +18866224439 / 9594750338</span>
-          </h6>
-        </li>
-        <li>
-          <h6 className="d-flex align-items-start">
-            <FaMapMarkerAlt className="me-2 text-primary" />
-            <span>
-              Address: Ganeshleela Soc. B wing Ground floor, opposite to
-              Narepark ground Nana palkar Lane Parel Mumbai 400012
-            </span>
-          </h6>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-        <p className="fs-4">
-          Or, simply fill out the form below, and we'll get back to you as soon as possible.
-        </p>
-
-        <form className="mt-4" onSubmit={handleSubmit}>
-          <div className="mb-3 input-group">
-            <span className="input-group-text bg-danger text-white">
-              <FaUser />
-            </span>
-            <input
-              type="text"
-              className="form-control"
-              id="name"
-              placeholder="Enter your name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-               autoComplete="off"
-            />
+      </div>
+      <div className="justify-content-center d-flex align-items-ceneter flex-wrap gap-4">
+          {/* Contact Information */}
+          <div className="col-12 col-md-10 col-lg-5 mb-4">
+            <ul className="list-group shadow">
+              <li className="list-group-item">
+                <h6>
+                  <FaEnvelope className="me-2 text-danger" />
+                  Email:{" "}
+                  <span className="text-dark">devsirtutorials@gmail.com</span>
+                </h6>
+              </li>
+              <li className="list-group-item">
+                <h6>
+                  <FaPhone className="me-2 text-success" />
+                  Phone:{" "}
+                  <span className="text-dark">+18866224439 / 9594750338</span>
+                </h6>
+              </li>
+              <li className="list-group-item">
+                <h6>
+                  <FaMapMarkerAlt className="me-2 text-primary" />
+                  Address:
+                  <span className="text-dark">
+                    Ganeshleela Soc. B wing Ground floor, opposite to Narepark
+                    ground, Nana palkar Lane Parel, Mumbai 400012
+                  </span>
+                </h6>
+              </li>
+            </ul>
           </div>
-          <div className="mb-3 input-group">
-            <span className="input-group-text bg-primary text-white">
-              <FaEnvelope />
-            </span>
-            <input
-              type="email"
-              className="form-control"
-              id="email"
-              placeholder="Enter your email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-               autoComplete="off"
-            />
+
+          {/* Contact Form */}
+          <div className="col-12 col-md-10 col-lg-5">
+            <div className="card shadow">
+              <div className="card-body">
+                <h5 className="card-title text-center text-danger">
+                  Send Us a Message
+                </h5>
+                <form onSubmit={handleSubmit}>
+                  <div className="form-floating mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      placeholder="Enter your name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label htmlFor="name">
+                      <FaUser className="me-2" />
+                      Your Name
+                    </label>
+                  </div>
+
+                  <div className="form-floating mb-3">
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label htmlFor="email">
+                      <FaEnvelope className="me-2" />
+                      Email Address
+                    </label>
+                  </div>
+
+                  <div className="form-floating mb-3">
+                    <textarea
+                      className="form-control"
+                      id="message"
+                      placeholder="Type your message here"
+                      style={{ height: "150px" }}
+                      value={formData.message}
+                      onChange={handleChange}
+                      required
+                    ></textarea>
+                    <label htmlFor="message">
+                      <FaPaperPlane className="me-2" />
+                      Message
+                    </label>
+                  </div>
+
+                  <button type="submit" className="btn btn-danger w-100">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
-          <div className="mb-3 input-group">
-            <span className="input-group-text bg-success text-white">
-              <FaPaperPlane />
-            </span>
-            <textarea
-              className="form-control"
-              id="message"
-              rows="4"
-              placeholder="Type your message here"
-              required
-              value={formData.message}
-              onChange={handleChange}
-               autoComplete="off"
-            ></textarea>
-          </div>
-          <button type="submit" className="btn btn-danger">
-            Submit
-          </button>
-        </form>
       </div>
     </div>
   );

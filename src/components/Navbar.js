@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {Modal,Button} from 'react-bootstrap';
-import image from '../components/dev.jpg'
+
 
 const Navbar = ({ authData, setAuthData }) => {
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
@@ -43,80 +43,6 @@ const Navbar = ({ authData, setAuthData }) => {
   };
 
   return (
-  //   <nav className="navbar navbar-expand-lg navbar-dark bg-primary h-2 sticky-top">
-  //     <div className="container-fluid">
-
-  //     <div className="d-flex justify-content-between align-items-center p-1">
-  // {/* Left section with DevSir */}
-  // <div className="d-flex align-items-center">
-  //   <div className="bg-danger p-2 rounded-pill">
-  //     <h5 className="text-white m-0">DevSir</h5>
-  //   </div>
-  // </div>
-
-  // {/* Right section with Toggle Button */}
-  // <button
-  //   className="navbar-toggler"
-  //   type="button"
-  //   data-bs-toggle="collapse"
-  //   data-bs-target="#navbarNav"
-  //   aria-controls="navbarNav"
-  //   aria-expanded="false"
-  //   aria-label="Toggle navigation"
-  // >
-  //   <span className="navbar-toggler-icon"></span>
-  // </button>
-  //     </div>
-
-
-  //       <div className="collapse navbar-collapse text-right" id="navbarNav">
-  //         <ul className="navbar-nav ms-auto">
-  //           <li className="nav-item">
-  //             <Link className="nav-link text-white" to="/">
-  //               Home
-  //             </Link>
-  //           </li>
-  //           <li className="nav-item">
-  //             <Link className="nav-link text-white" to="/about">
-  //               About
-  //             </Link>
-  //           </li>
-  //           <li className="nav-item">
-  //             <Link className="nav-link text-white" to="/contact">
-  //               Contact
-  //             </Link>
-  //           </li>
-  //           {authData ? (
-  //             <li className="nav-item">
-  //               <button className="btn btn-danger nav-link" onClick={handleLogoutClick}>
-  //                 <span className='text-white'>Logout</span>
-  //               </button>
-  //             </li>
-  //           ) : (
-  //             <li className="nav-item">
-  //               <Link className="nav-link text-white" to="/">
-  //                 Login
-  //               </Link>
-  //             </li>
-  //           )}
-  //         </ul>
-  //       </div>
-  //     </div>
-
-  //     {/* Custom Modal for Logout Confirmation */}
-  //     <Modal show={showModal} onHide={handleCloseModal}>
-  //       <Modal.Header closeButton>
-  //         <Modal.Title>Confirm Logout</Modal.Title>
-  //       </Modal.Header>
-  //       <Modal.Body>
-  //         Are you sure you want to log out?
-  //       </Modal.Body>
-  //       <Modal.Footer>
-  //         <Button variant="secondary" onClick={handleCloseModal}>No</Button>
-  //         <Button variant="danger" onClick={handleLogoutConfirm}>Yes</Button>
-  //       </Modal.Footer>
-  //     </Modal>
-  //   </nav>
   <nav className="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
   <div className="container-fluid">
     

@@ -15,7 +15,7 @@ const shuffleArray = (array) => {
   return array;
 };
 
-const Quiz = ({userId, testId}) => {
+const Quiz = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedLessons } = location.state || {}; // Add fallback for undefined state
@@ -76,8 +76,6 @@ const Quiz = ({userId, testId}) => {
       console.error("Failed to report cheating:", error);
     }
   };
-  
-
   useEffect(() => {
     const fetchQuestions = async () => {
       setLoading(true);
@@ -88,7 +86,7 @@ const Quiz = ({userId, testId}) => {
         }
 
         // Request the questions for the selected lessons
-        const response = await axios.post("https://quiz-server-bh0b.onrender.com/api/questions", {
+        const response = await axios.post("http://localhost:5000/api/questions", {
           lessons: selectedLessons,
         });
 
@@ -102,17 +100,25 @@ const Quiz = ({userId, testId}) => {
           const numLessons = selectedLessons.length;
           let questionsPerLesson = [];
 
-          // Updated distribution logic based on selected lessons
-          if (numLessons === 1) {
-            questionsPerLesson = [25];
-          } else if (numLessons === 2) {
-            questionsPerLesson = [12, 13];
-          } else if (numLessons === 3) {
-            questionsPerLesson = [8, 8, 9];
-          } else if (numLessons === 4) {
-            questionsPerLesson = [6, 6, 6, 7];
-          }
 
+          const totalQuestions = 25;  // or any total number of questions
+
+          if (numLessons >= 1) {
+            // Calculate the base number of questions per lesson
+            const baseQuestions = Math.floor(totalQuestions / numLessons);
+            
+            // Calculate the remainder to distribute among lessons
+            const remainder = totalQuestions % numLessons;
+          
+            // Initialize the array with base questions per lesson
+            questionsPerLesson = Array(numLessons).fill(baseQuestions);
+          
+            // Distribute the remainder (if any) among the first 'remainder' lessons
+            for (let i = 0; i < remainder; i++) {
+              questionsPerLesson[i]++;
+            }
+          }
+          
           selectedLessons.forEach((lesson, index) => {
             const lessonQuestionsForThisLesson = lessonQuestions.filter(
               (question) => question.lesson === lesson
@@ -185,53 +191,56 @@ const Quiz = ({userId, testId}) => {
     setSelectedAnswer(userAnswers[prevIndex]?.answer || null);
   };
 
+
 const handleSubmit = async () => {
+  // Stop the timer and finalize the quiz
   setEndTime(Date.now());
   setQuizCompleted(true);
 
-  // Get the calculated score and wrong answers
+  // Calculate the score and wrong answers
   const { score, wrongAnswers } = calculateScore();
 
+  // Calculate time taken for the quiz
   const totalTime = Math.floor((Date.now() - startTime) / 1000); // Time in seconds
   const totalQuestions = questions.length;
 
-  // Count not attempted questions
+  // Count unanswered questions
   const notAttempted = userAnswers.filter(answer => answer.answer === "Not Attempted").length;
   const attemptedQuestions = totalQuestions - notAttempted;
 
+  const username = localStorage.getItem('username');
   const token = localStorage.getItem('token');
-  const username = localStorage.getItem("username");
 
+  // Construct the quiz result object
   const quizResult = {
-    username: username,
-    totalQuestions: totalQuestions,
-    attemptedQuestions: attemptedQuestions,
-    correctAnswers: score,  // Send the correct score
-    wrongAnswers: wrongAnswers,  // Send wrong answers
-    notAttempted: notAttempted,
+    username,
+    totalQuestions,
+    attemptedQuestions,
+    correctAnswers: score,
+    wrongAnswers,
+    notAttempted,
     timeTaken: totalTime,
-    cheatingAttempts: cheatingAttempts, // Ensure this is defined and used properly
+    cheatingAttempts,  // Include cheating attempts
   };
 
-  console.log('Result for UI:', quizResult); // Log the result to confirm it's correct
-  console.log('Sending result to backend:', quizResult); // Log to verify data
-
   try {
-    const response = await fetch('https://quiz-server-d94n.onrender.com/quiz/submit-quiz', {
+    // Send the quiz result to the backend API
+    const response = await fetch('http://localhost:5000/api/quiz/submit-quiz', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(quizResult), // Sending quiz result
+      body: JSON.stringify(quizResult),  // Send the quiz result
     });
 
     const result = await response.json();
+
     if (response.ok) {
       console.log('Quiz result saved:', result);
-
-      // Trigger SMS sending logic if needed
-      await fetch('https://quiz-server-d94n.onrender.com/api/quiz/send-sms', {
+      
+      // Optionally, send an SMS with the quiz result
+      await fetch('http://localhost:5000/api/quiz/send-sms', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -239,29 +248,30 @@ const handleSubmit = async () => {
         },
         body: JSON.stringify({
           message: `Quiz Result for ${username}:\n` +
-               `Total Questions: ${totalQuestions}\n` +
-               `Attempted Questions: ${attemptedQuestions}\n` +
-               `Correct Answers: ${score}\n` +
-               `Wrong Answers: ${wrongAnswers.length}\n` +  // Show count of wrong answers
-               `Time Taken: ${totalTime} seconds\n` +
-               `Not Attempted: ${notAttempted}\n` +
-               `Cheating Attempts: ${cheatingAttempts}\n`,
-          phoneNumber: `whatsapp:+918866224439`,
+                  `Total Questions: ${totalQuestions}\n` +
+                  `Attempted Questions: ${attemptedQuestions}\n` +
+                  `Correct Answers: ${score}\n` +
+                  `Wrong Answers: ${wrongAnswers.length}\n` +
+                  `Time Taken: ${totalTime} seconds\n` +
+                  `Not Attempted: ${notAttempted}\n` +
+                  `Cheating Attempts: ${cheatingAttempts}\n`,
+          phoneNumber: `whatsapp:+918866224439`,  // Replace with correct phone number
         }),
       });
+      // Optionally, show a success message
+      toast.success('Quiz submitted successfully!');
     } else {
       console.log('Error saving quiz result:', result);
+      toast.error('Failed to submit quiz result');
     }
   } catch (error) {
     console.error('Error submitting quiz:', error);
+    toast.error('An error occurred while submitting the quiz');
   }
 };
 
-
-
-
 const calculateScore = () => {
-  const wrongAnswers = [];
+const wrongAnswers = [];
 
   // Calculate the score
   const correctAnswers = userAnswers.reduce((acc, { questionId, answer }) => {
@@ -332,6 +342,7 @@ if (quizCompleted) {
    
     return (
       <div className="container mt-5 col-lg-6 resultPage">
+       <ToastContainer />
         <div className="card shadow p-4">
           <div className="card-body text-center">
             <h4 className="text-success">Quiz Completed!</h4>
@@ -396,29 +407,22 @@ if (quizCompleted) {
             
 
             {/* Buttons for Restarting or Going Back */}
-            <button
-              className="btn btn-success mx-2"
-              onClick={() => window.location.reload()}
-            >
-              Try Again
-            </button>
-            <button
-              className="btn btn-secondary mx-2"
-              onClick={() => window.location.href = '/'}
-            >
-              Go to Home
-            </button>
+
+    <button
+      className="btn btn-success mx-2"
+      onClick={() => navigate("/home")}
+    >
+      Go To Home
+    </button>
             {/* Submit to Teacher Button */}
           </div>
         </div>
       </div>
     );
 }
-
   const currentQuestion = questions[currentQuestionIndex] || {};
-
   return (
-    <div className="container mt-3">
+    <div className="container mt-5">
       <ToastContainer />
       <div className="row justify-content-center">
         {/* Right Column: Quiz Content */}

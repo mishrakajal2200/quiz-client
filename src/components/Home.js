@@ -17,7 +17,7 @@ const Home = () => {
     'Magnetic Effects of Electric Current': 18,
     'How Do Organisms Reproduce': 26,
     'Heredity': 13,
-    'Chamical Reactions and Equations':27
+    'Chemical Reactions and Equations':26
   };
 
   // Calculate the total number of questions based on selected lessons
@@ -66,7 +66,7 @@ const Home = () => {
 
   return (
     <div className="home-page d-flex justify-content-center align-items-center mt-4 mb-4">
-      <div className="container col-lg-6 col-sm-6 col-md-8 col-11 bg-light shadow-lg p-4 rounded">
+      <div className="container col-lg-6 col-sm-6 col-md-8 col-11 bg-light shadow-lg p-3 rounded">
         <h1 className="text-center text-success mt-3">
           Welcome to QuizMaster{' '}
           <span className="text-info">{username ? ` ${username}!` : ''}</span>
@@ -89,7 +89,7 @@ const Home = () => {
             'Magnetic Effects of Electric Current',
             'How Do Organisms Reproduce',
             'Heredity',
-            'Chamical Reactions and Equations',
+            'Chemical Reactions and Equations',
           ].map((lesson, index) => (
             <div className="col-md-6 mb-3" key={index}>
               <label

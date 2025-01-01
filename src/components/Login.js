@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import '../Styles/style.css';
-import './login.css';
+
 const Login = ({ setAuthData }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -32,7 +32,7 @@ const Login = ({ setAuthData }) => {
     setIsLoading(true);
    
     try {
-      const response = await axios.post('https://quiz-server-d94n.onrender.com/api/login', formData);
+      const response = await axios.post('http://localhost:5000/api/login', formData);
 
       // Store token and username in localStorage
       localStorage.setItem('token', response.data.token);
@@ -58,7 +58,7 @@ const Login = ({ setAuthData }) => {
   return (
     <div className="login-page d-flex justify-content-center align-items-center">
       <ToastContainer position="top-right" />
-      <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 align-items-center">
+      <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 mt-5 align-items-center">
         <div className="justify-content-center align-items-center d-flex">
           <img
             src="https://cdn4.iconfinder.com/data/icons/ui-3d-01-of-3/100/UI_26-512.png"

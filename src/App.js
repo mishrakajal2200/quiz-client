@@ -12,6 +12,7 @@ import Details from './components/Details';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 function App() {
   const [authData, setAuthData] = useState(() => {
     const token = localStorage.getItem('token');
@@ -75,6 +76,7 @@ function AppContent({ authData, setAuthData }) {
         <Route path="/contact" element={<ProtectedRoute element={<Contact />} />} />
         <Route path="/quiz" element={<ProtectedRoute element={<Quiz />} />} />
         <Route path="/details" element={<ProtectedRoute element={<Details />} />} />
+       
       </Routes>
     </>
   );

@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,7 +15,6 @@ const Login = ({ setAuthData }) => {
     email: '',
     password: ''
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,8 +29,6 @@ const Login = ({ setAuthData }) => {
       return;
     }
 
-    setIsLoading(true);
-   
     try {
       const response = await axios.post('https://quiz-server-d94n.onrender.com/api/login', formData);
 
@@ -43,21 +41,19 @@ const Login = ({ setAuthData }) => {
 
       toast.success(`Welcome, ${response.data.username}!`);
 
-      // Delay navigation to give time for the toast message to appear
-      setTimeout(() => {
-        navigate('/home');
-      }, 1000);
+      // Navigate immediately to the home page
+      navigate('/home');
     } catch (error) {
       console.error('Error during login:', error.response?.data?.message || error.message);
       toast.error(error.response?.data?.message || 'Error during login!');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <div className="login-page d-flex justify-content-center align-items-center">
-      <ToastContainer position="top-right" />
+      {/* ToastContainer should be placed here to handle the toasts globally */}
+      <ToastContainer/>
+
       <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 mt-5 align-items-center">
         <div className="justify-content-center align-items-center d-flex">
           <img
@@ -110,13 +106,7 @@ const Login = ({ setAuthData }) => {
               type="submit"
               className="btn btn-success col-6 col-lg-7 rounded-pill"
             >
-              {isLoading ? (
-                <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              ) : (
-                'Login'
-              )}
+              Login
             </button>
           </div>
         </form>

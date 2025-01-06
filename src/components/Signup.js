@@ -46,10 +46,8 @@ const Signup = ({ setAuthData }) => {
       setAuthData({ token: response.data.token, username: response.data.username });
       toast.success('Account created successfully!');
 
-      // Delay navigation to give time for the toast message to appear
-      setTimeout(() => {
         navigate('/login');
-      }, 2000); // Adjust the delay as needed (e.g., 2000ms = 2 seconds)
+      
     } catch (error) {
       console.error('Error during signup:', error.response?.data?.message || error.message);
       toast.error(error.response?.data?.message || 'Error during signup!');

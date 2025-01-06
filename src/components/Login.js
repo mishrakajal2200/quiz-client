@@ -21,6 +21,8 @@ const Login = ({ setAuthData }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+   const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,6 +30,8 @@ const Login = ({ setAuthData }) => {
       toast.error('Password must be at least 6 characters long!');
       return;
     }
+ 
+    setIsLoading(true);
 
     try {
       const response = await axios.post('https://quiz-server-d94n.onrender.com/api/login', formData);
@@ -46,6 +50,8 @@ const Login = ({ setAuthData }) => {
     } catch (error) {
       console.error('Error during login:', error.response?.data?.message || error.message);
       toast.error(error.response?.data?.message || 'Error during login!');
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,7 +112,13 @@ const Login = ({ setAuthData }) => {
               type="submit"
               className="btn btn-success col-6 col-lg-7 rounded-pill"
             >
-              Login
+             {isLoading ? (
+                <div className="spinner-border spinner-border-sm" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                'Login'
+              )}
             </button>
           </div>
         </form>

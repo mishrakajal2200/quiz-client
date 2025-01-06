@@ -200,6 +200,7 @@ const handleSubmit = async () => {
   // Calculate the score and wrong answers
   const { score, wrongAnswers } = calculateScore();
 
+
   // Calculate time taken for the quiz
   const totalTime = Math.floor((Date.now() - startTime) / 1000); // Time in seconds
   const totalQuestions = questions.length;

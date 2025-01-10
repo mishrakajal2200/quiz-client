@@ -369,10 +369,13 @@ const Signup = ({ setAuthData }) => {
           </div>
         </form>
 
-        <p className="mt-3">
-          Already Have An Account?{' '}
-          <Link to="/" className="text-decoration-none">Sign In</Link>
-        </p>
+        <p className="mt-3 d-flex justify-content-center align-items-center flex-wrap">
+  <span className="text-dark mr-2">Already Have An Account?</span>
+  <Link to="/login" className="text-decoration-none text-success">
+    Login
+  </Link>
+</p>
+
       </div>
     </div>
   );

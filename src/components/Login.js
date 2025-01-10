@@ -1,65 +1,71 @@
 
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './login.css';
 
-import '../Styles/style.css';
 
 const Login = ({ setAuthData }) => {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-   const [isLoading, setIsLoading] = useState(false);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (formData.password.length < 6) {
       toast.error('Password must be at least 6 characters long!');
       return;
     }
- 
+  
     setIsLoading(true);
-
+  
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // Timeout after 5 seconds
+  
     try {
-      const response = await axios.post('https://quiz-server-d94n.onrender.com/api/login', formData);
-
-      // Store token and username in localStorage
+      const response = await axios.post(
+        'https://quiz-server-d94n.onrender.com/api/login',
+        formData,
+        { signal: controller.signal }
+      );
+  
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.username);
-
-      // Optional: Set auth data in state
+  
       setAuthData({ token: response.data.token, username: response.data.username });
-
+  
       toast.success(`Welcome, ${response.data.username}!`);
-
-      // Navigate immediately to the home page
       navigate('/home');
     } catch (error) {
-      console.error('Error during login:', error.response?.data?.message || error.message);
-      toast.error(error.response?.data?.message || 'Error during login!');
-    }finally {
+      if (error.name === 'AbortError') {
+        toast.error('Request timed out! Please try again later.');
+      } else {
+        console.error('Error during login:', error.response?.data?.message || error.message);
+        toast.error(error.response?.data?.message || 'Error during login!');
+      }
+    } finally {
+      clearTimeout(timeout);
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="login-page d-flex justify-content-center align-items-center">
-      {/* ToastContainer should be placed here to handle the toasts globally */}
-      <ToastContainer/>
-
+      <ToastContainer position="top-right" />
       <div className="bg-white shadow-lg p-3 px-5 rounded col-lg-4 col-sm-6 col-md-6 col-10 mt-5 align-items-center">
         <div className="justify-content-center align-items-center d-flex">
           <img
@@ -112,7 +118,7 @@ const Login = ({ setAuthData }) => {
               type="submit"
               className="btn btn-success col-6 col-lg-7 rounded-pill"
             >
-             {isLoading ? (
+              {isLoading ? (
                 <div className="spinner-border spinner-border-sm" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
@@ -123,9 +129,12 @@ const Login = ({ setAuthData }) => {
           </div>
         </form>
 
-        <p className="mt-3">
-          Don't Have An Account? <Link to="/signup" className="text-decoration-none">Sign Up</Link>
-        </p>
+        <p className="mt-3 d-flex justify-content-center align-items-center flex-nowrap">
+  <span className="text-dark mr-2">Don't Have An Account?</span>
+  <Link to="/signup" className="text-decoration-none text-success">
+    SignUp
+  </Link>
+</p>
       </div>
     </div>
   );
